@@ -1,0 +1,9 @@
+.git/
+.github/
+.directory
+.dockerignore
+dockerfile
+docker-compose.yml
+test/
+examples/
+notebooks/

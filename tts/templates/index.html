@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Text2Speech Engine</title>
+    <style>
+      body {
+        padding-top: 54px;
+      }
+
+      .app {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .app__title {
+        margin: 0;
+      }
+
+      .app__form {
+        margin: 1rem auto;
+      }
+
+      @media (min-width: 992px) {
+        body {
+          padding-top: 56px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app" class="app">
+      <h1 class="app__title">TensorFlowTTS</h1>
+      <div class="app__form">
+        <form @submit.prevent="submit">
+          <input name="text" placeholder="Please enter sentences here..." size=45 autofocus required>
+          <select name="voice" required>
+            <template v-for="voice in voices" :key="voice">
+              <option :value="voice" v-text="voice"/>
+            </template>
+          </select>
+          <button type="submit" :disabled="disabled">Speak</button>
+          <br/>
+        </form>
+      </div>
+      <template v-if="audio">
+        <audio :src="audio" controls autoplay/>
+      </template>
+      <p v-text="message"/>
+    </div>
+
+    <script type="module">
+      import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    
+      createApp({
+        setup() {
+          const voices = reactive([]);
+          const message = ref('');
+          const disabled = ref(false);
+          const audio = ref(null);
+
+          async function submit(event) {
+            disabled.value = true;
+
+            const data = new FormData(event.target);
+            const payload = Object.fromEntries(data.entries());
+            const response = await fetch('/tts', {
+              method: 'POST',
+              body: JSON.stringify(payload),
+              cache: 'no-cache',
+              headers: {
+                'Content-type':'application/json', 
+              },
+            });
+
+            if (response.ok) {
+              const blob = await response.blob()
+
+              message.value = '';
+              audio.value = URL.createObjectURL(blob);
+            } else {
+              message.value = response.statusText;
+            }
+
+            disabled.value = false;
+          }
+
+          onMounted(async () => {
+            const response = await fetch('/voices');
+            const items = await response.json();
+
+            voices.push(...items);
+          });
+
+          return { audio, disabled, message, voices, submit };
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>

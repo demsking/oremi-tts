@@ -1,0 +1,12 @@
+version: '2.6'
+services:
+  tensorflowtts:
+    build: .
+    image: tensorflowtts-api:1.8x
+    volumes:
+      - ./tts:/var/www/tts
+      - ~/.cache/nltk_data:/home/mandela/nltk_data
+      - ~/.cache/tensorflow_tts:/home/mandela/.cache/tensorflow_tts
+    tty: true
+    ports:
+      - 5000:5000

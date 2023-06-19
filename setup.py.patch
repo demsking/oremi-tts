@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+index 71d6428..60d3b6b 100755
+--- a/setup.py
++++ b/setup.py
+@@ -22,7 +22,7 @@ if LooseVersion(pip.__version__) < LooseVersion("19"):
+ # TODO(@dathudeptrai) update requirement if needed.
+ requirements = {
+     "install": [
+-        "tensorflow-gpu==2.7.0",
++        # "tensorflow-gpu==2.7.0", # use the docker tensorflow/tensorflow:2.9.2
+         "tensorflow-addons>=0.10.0",
+         "setuptools>=38.5.1",
+         "huggingface_hub==0.0.8",
