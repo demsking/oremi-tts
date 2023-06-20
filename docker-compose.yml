@@ -9,4 +9,4 @@ services:
       - ~/.cache/tensorflow_tts:/home/mandela/.cache/tensorflow_tts
     tty: true
     ports:
-      - 5000:5000
+      - 5215:5215

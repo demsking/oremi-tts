@@ -33,6 +33,6 @@ RUN pip install --no-warn-script-location -r /var/www/requirements.txt
 
 COPY tts/ /var/www/tts
 WORKDIR /var/www/tts
-EXPOSE 5000
+EXPOSE 5215
 
-ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:5000", "server:app"]
+ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:5215", "server:app"]
