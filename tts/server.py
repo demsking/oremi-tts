@@ -62,7 +62,6 @@ def api_tts():
   text = request.json.get('text', '').strip()
   voice = request.json.get('voice', '').strip()
   text = strip_ending_punctuations(text)
-  text = convert_numbers_to_words(text, lang = voice)
 
   if not voice or not text:
     return "Bad Request", 400
@@ -71,10 +70,13 @@ def api_tts():
     load_voice(voice)
   except VoiceNotFound as error:
     return str(error), 404
+  
+  model = voices_instances[voice]
+  text = model.parse_special_chars(text)
+  text = convert_numbers_to_words(text, lang = model.lang)
 
   app.logger.info('Synthetizing: %s', text)
 
-  model = voices_instances[voice]
   _mels, _alignment_history, audio = model.do_synthesis(text)
 
   with io.BytesIO() as out:

@@ -1,13 +1,23 @@
+import re
+
 import tensorflow as tf
 
 
 class Voice:
-  def __init__(self, text2mel_model, vocoder_model, processor) -> None:
+  def __init__(self, lang: str, text2mel_model, vocoder_model, processor, special_chars) -> None:
+    self.lang = lang
     self.text2mel_model = text2mel_model
     self.vocoder_model = vocoder_model
     self.processor = processor
     self.text2mel_name = 'TACOTRON'
     self.vocoder_name = 'MB-MELGAN'
+    self.special_chars = special_chars
+
+  def parse_special_chars(self, text: str):
+    for special_char, word in self.special_chars.items():
+      if special_char in text:
+        text = text.replace(special_char, f' {word} ')
+    return re.sub(r'\s+', ' ', text)
 
   def do_synthesis(self, input_text: str):
     input_ids = self.processor.text_to_sequence(input_text)
