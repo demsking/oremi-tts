@@ -31,8 +31,8 @@ ENV PATH=/home/mandela/.local/bin:$PATH
 COPY ./requirements.txt /var/www/requirements.txt
 RUN pip install --no-warn-script-location -r /var/www/requirements.txt
 
-COPY tts/ /var/www/tts
-WORKDIR /var/www/tts
+COPY oremi_tts/ /var/www/oremi_tts
+WORKDIR /var/www/oremi_tts
 EXPOSE 5215
 
-ENTRYPOINT ["gunicorn", "--bind=0.0.0.0:5215", "server:app"]
+ENTRYPOINT ["gunicorn", "--name=oremi-tts", "--bind=0.0.0.0:5215", "server:app"]

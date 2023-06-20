@@ -4,18 +4,16 @@ import logging
 from flask import Flask, Response, render_template, request
 from flask_cors import CORS
 
-from tts.utils import save_wav, strip_ending_punctuations, convert_numbers_to_words
-from tts.voices.en import EnglishVoice
-from tts.voices.fr import FrenchVoice
+from oremi_tts.utils import save_wav, strip_ending_punctuations, convert_numbers_to_words
+from oremi_tts.voices.en import EnglishVoice
+from oremi_tts.voices.fr import FrenchVoice
 
+app = Flask('oremi-tts')
+voices_instances = {}
 voices_objects = {
   'fr': FrenchVoice,
   'en': EnglishVoice,
 }
-
-voices_instances = {}
-
-app = Flask('tts')
 
 CORS(app)
 app.logger.addHandler(logging.StreamHandler())
@@ -70,7 +68,7 @@ def api_tts():
     load_voice(voice)
   except VoiceNotFound as error:
     return str(error), 404
-  
+
   model = voices_instances[voice]
   text = model.parse_special_chars(text)
   text = convert_numbers_to_words(text, lang = model.lang)

@@ -3,7 +3,7 @@
 .directory
 .dockerignore
 dockerfile
-docker-compose.yml
+docker-compose.yaml
 test/
 examples/
 notebooks/

@@ -3,26 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Text2Speech Engine</title>
+    <meta name="description" content="Oremi Text to Speech engine">
+    <meta name="author" content="Sébastien Demanou">
+    <title>Oremi TTS</title>
     <style>
       body {
         padding-top: 54px;
-      }
-
-      .app {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .app__title {
-        margin: 0;
-      }
-
-      .app__form {
-        margin: 1rem auto;
       }
 
       @media (min-width: 992px) {
@@ -30,13 +16,26 @@
           padding-top: 56px;
         }
       }
+
+      .oremi-tts {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .oremi-tts__title {
+        margin: 0;
+      }
+
+      .oremi-tts__form {
+        margin: 1rem auto;
+      }
     </style>
   </head>
-
   <body>
-    <div id="app" class="app">
-      <h1 class="app__title">TensorFlowTTS</h1>
-      <div class="app__form">
+    <div id="oremi-tts" class="oremi-tts">
+      <h1 class="oremi-tts__title">Oremi Text to Speech</h1>
+      <div class="oremi-tts__form">
         <form @submit.prevent="submit">
           <input name="text" placeholder="Please enter sentences here..." size=45 autofocus required>
           <select name="voice" required>
@@ -53,7 +52,6 @@
       </template>
       <p v-text="message"/>
     </div>
-
     <script type="module">
       import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
     
@@ -99,7 +97,7 @@
 
           return { audio, disabled, message, voices, submit };
         },
-      }).mount('#app');
+      }).mount('#oremi-tts');
     </script>
   </body>
 </html>
