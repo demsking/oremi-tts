@@ -9,7 +9,7 @@
 Start Oremi TTS:
 
 ```sh
-docker run -d --name oremi-tts -p 5215:5212 demsking/oremi-tts
+docker run -d --name oremi-tts -p 5215:5215 demsking/oremi-tts
 ```
 
 Open http://localhost:5215
