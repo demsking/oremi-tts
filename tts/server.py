@@ -4,7 +4,7 @@ import logging
 from flask import Flask, Response, render_template, request
 from flask_cors import CORS
 
-from tts.utils import save_wav, strip_ending_punctuations
+from tts.utils import save_wav, strip_ending_punctuations, convert_numbers_to_words
 from tts.voices.en import EnglishVoice
 from tts.voices.fr import FrenchVoice
 
@@ -62,6 +62,7 @@ def api_tts():
   text = request.json.get('text', '').strip()
   voice = request.json.get('voice', '').strip()
   text = strip_ending_punctuations(text)
+  text = convert_numbers_to_words(text, lang = voice)
 
   if not voice or not text:
     return "Bad Request", 400

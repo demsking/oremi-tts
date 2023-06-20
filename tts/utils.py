@@ -1,5 +1,8 @@
+import re
+
 import numpy as np
 import scipy.io.wavfile
+from num2words import num2words
 
 __all__ = [
   'save_wav',
@@ -7,6 +10,18 @@ __all__ = [
 ]
 
 _PUNCTUATIONS = [".", ",", "?", "!", ":", ";", "-", "(", ")", "[", "]", "{", "}", "\"", "'", "`", "...", "«", "»", "“", "”", "‘", "’", "–", "—"]
+
+
+def convert_numbers_to_words(text: str, lang: str):
+  words = []
+  for word in text.split():
+    if re.match(r'^-?\d+\.?\d*$', word):
+      number = float(word) if '.' in word else int(word)
+      number_in_words = num2words(number, lang = lang)
+      words.append(number_in_words)
+    else:
+      words.append(word)
+  return ' '.join(words)
 
 
 def save_wav(wav, path, rate = 24000):
