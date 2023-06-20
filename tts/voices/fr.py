@@ -31,7 +31,6 @@ class FrenchVoice(Voice):
         '≠': 'différent de',
         '≈': 'environ',
         '+': 'plus',
-        '-': 'moins',
         '*': 'multiplié par',
         '/': 'divisé par',
         '<': 'inférieur à',

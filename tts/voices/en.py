@@ -9,7 +9,7 @@ class EnglishVoice(Voice):
       lang = 'en',
       text2mel_model = TFAutoModel.from_pretrained("tensorspeech/tts-tacotron2-ljspeech-en", name="tacotron2"),
       vocoder_model = TFAutoModel.from_pretrained("tensorspeech/tts-melgan-ljspeech-en", name="melgan"),
-      processor = AutoProcessor.from_pretrained("tensorspeech/tts-tacotron2-synpaflex-fr"),
+      processor = AutoProcessor.from_pretrained("tensorspeech/tts-tacotron2-ljspeech-en"),
       special_chars = {
         '°C': 'degrees Celsius',
         '°F': 'degrees Fahrenheit',
@@ -31,7 +31,6 @@ class EnglishVoice(Voice):
         '≠': 'not equal to',
         '≈': 'approximately',
         '+': 'plus',
-        '-': 'minus',
         '*': 'multiplied by',
         '/': 'divided by',
         '<': 'less than',
