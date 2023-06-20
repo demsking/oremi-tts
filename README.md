@@ -2,7 +2,7 @@
 
 [![Buy me a beer](https://img.shields.io/badge/Buy%20me-a%20beer-1f425f.svg)](https://www.buymeacoffee.com/demsking)
 
-![Oremi Text to Speech Screenshot](https://gitlab.com/demsking/oremi-tts/blob/main/screenshot.png)
+![Oremi Text to Speech Screenshot](screenshot.png)
 
 ## Start
 
