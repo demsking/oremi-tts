@@ -5,30 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Oremi Text to Speech engine">
     <meta name="author" content="Sébastien Demanou">
-    <title>Oremi TTS</title>
+    <title>Oremi Text to Speech</title>
     <style>
       body {
-        padding-top: 54px;
+        margin: 0;
       }
-
-      @media (min-width: 992px) {
-        body {
-          padding-top: 56px;
-        }
-      }
-
+      
       .oremi-tts {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        gap: 1rem;
+
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        
+        padding-top: 2rem;
+        background-image: url(../static/retrosupply-jLwVAUtLOAQ-unsplash.jpg);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
       }
 
       .oremi-tts__title {
         margin: 0;
+        color: white;
+        text-shadow: #000 1px 0 10px;
       }
 
-      .oremi-tts__form {
-        margin: 1rem auto;
+      .oremi-tts__form,
+      .oremi-tts__card {
+        border-radius: .5rem;
+        background-color: white;
+        box-shadow: 0 0 0 1px rgba(53,72,91,.04),0 2px 2px rgba(0,0,0,0),0 4px 4px rgba(0,0,0,.01),0 10px 8px rgba(0,0,0,.02),0 15px 15px rgba(0,0,0,.02),0 30px 30px rgba(0,0,0,.02),0 70px 65px rgba(0,0,0,.03);
+      }
+      
+      .oremi-tts__form__fieldset {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+
+        border: none;
+        background-color: transparent;
+
+        padding: .7rem 1.3rem;
+        margin: 0;
+
+        overflow: hidden;
+      }
+
+      .oremi-tts__form__fieldset__input {
+        border: none;
+        background-color: transparent;
+        outline: none;
+      }
+
+      .oremi-tts__form__fieldset__input--text {
+        min-width: 30vw;
+      }
+
+      .oremi-tts__form__fieldset__button {
+        color: white;
+        border: none;
+        background-color: #000;
+        border-radius: .2rem;
+        padding: .4em 1.2em;
+      }
+      
+      .oremi-tts__form__fieldset__button:disabled {
+        opacity: .6;
+      }
+
+      .oremi-tts__copyrights {
+        color: white;
+        text-align: center;
+        text-shadow: #000 1px 0 10px;
+      }
+      
+      .oremi-tts__copyrights a {
+        color: white;
       }
     </style>
   </head>
@@ -37,20 +95,44 @@
       <h1 class="oremi-tts__title">Oremi Text to Speech</h1>
       <div class="oremi-tts__form">
         <form @submit.prevent="submit">
-          <input name="text" placeholder="Please enter sentences here..." size=45 autofocus required>
-          <select name="voice" required>
-            <template v-for="voice in voices" :key="voice">
-              <option :value="voice" v-text="voice"/>
-            </template>
-          </select>
-          <button type="submit" :disabled="disabled">Speak</button>
-          <br/>
+          <fieldset class="oremi-tts__form__fieldset" :disabled="disabled">
+            <input
+              class="oremi-tts__form__fieldset__input oremi-tts__form__fieldset__input--text"
+              name="text"
+              placeholder="Please enter sentences here..."
+              maxlength="128"
+              autofocus
+              required>
+            <select class="oremi-tts__form__fieldset__input" name="voice" required>
+              <template v-for="voice in voices" :key="voice">
+                <option :value="voice" v-text="voice.toUpperCase()"/>
+              </template>
+            </select>
+            <button class="oremi-tts__form__fieldset__button" type="submit">
+              <template v-if="disabled">
+                Synthesizing...
+              </template>
+              <template v-else>
+                Speak
+              </template>
+            </button>
+          </fieldset>
         </form>
       </div>
+      <div class="oremi-tts__card" v-text="message"></div>
       <template v-if="audio">
         <audio :src="audio" controls autoplay/>
       </template>
-      <p v-text="message"/>
+      <div class="oremi-tts__copyrights">
+        <p>
+          Build with love by <a href="https://www.buymeacoffee.com/demsking">Sébastien Demanou</a>
+        </p>
+        <p>
+          <small>
+            Photo by <a href="https://unsplash.com/@retrosupply?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">RetroSupply</a> on <a href="https://unsplash.com/photos/jLwVAUtLOAQ?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+          </small>
+        </p>
+      </div>
     </div>
     <script type="module">
       import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
