@@ -1,4 +1,5 @@
-FROM tensorflow/tensorflow:2.9.2 AS install
+ARG TENSORFLOW_VERSION
+FROM tensorflow/tensorflow:${TENSORFLOW_VERSION} AS install
 
 # Point version to master: 136877136355c82d7ba474ceb7a8f133bd84767e (Mar 10, 2022)
 ARG TENSORFLOWTTS_VERSION=master
@@ -15,7 +16,8 @@ RUN git clone --depth 1 --branch ${TENSORFLOWTTS_VERSION} https://github.com/Ten
 
 # -------------------------------------
 
-FROM tensorflow/tensorflow:2.9.2
+ARG TENSORFLOW_VERSION
+FROM tensorflow/tensorflow:${TENSORFLOW_VERSION}
 
 ENV PYTHONPATH=/var/www:$PYTHONPATH
 ENV NUMBA_CACHE_DIR=/tmp/numba_cache

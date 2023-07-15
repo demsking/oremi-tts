@@ -3,10 +3,11 @@ services:
   tensorflowtts:
     build: .
     image: oremi-tts:1.0.0
+    runtime: nvidia
     volumes:
       - ./oremi_tts:/var/www/oremi_tts
       - ~/.cache/nltk_data:/home/mandela/nltk_data
       - ~/.cache/tensorflow_tts:/home/mandela/.cache/tensorflow_tts
     tty: true
     ports:
-      - 5215:5215
+      - 5216:5215

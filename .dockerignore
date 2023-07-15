@@ -7,3 +7,5 @@ docker-compose.yaml
 test/
 examples/
 notebooks/
+__pycache__
+**/__pycache__

@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: Oremi Text-to-Speech API
+  version: 1.0.0
+paths:
+  /:
+    get:
+      summary: Index page
+      responses:
+        '200':
+          description: Index page rendered
+  /voices:
+    get:
+      summary: Get available voices
+      responses:
+        '200':
+          description: List of available voices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /voice:
+    put:
+      summary: Load voice
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                voice:
+                  type: string
+                  description: Voice to load
+      responses:
+        '200':
+          description: Voice loaded successfully
+        '400':
+          description: Bad request, missing voice parameter
+        '404':
+          description: Voice not found
+  /tts:
+    post:
+      summary: Synthesize text to speech
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: Text to synthesize
+                voice:
+                  type: string
+                  description: Voice to use for synthesis
+      responses:
+        '200':
+          description: Synthesized audio returned as WAV file
+          content:
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Bad request, missing text or voice parameter
+        '404':
+          description: Voice not found
+

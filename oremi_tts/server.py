@@ -4,7 +4,11 @@ import logging
 from flask import Flask, Response, render_template, request
 from flask_cors import CORS
 
-from oremi_tts.utils import save_wav, strip_ending_punctuations, convert_numbers_to_words
+from oremi_tts.utils import (
+  convert_numbers_to_words,
+  save_wav,
+  strip_ending_punctuations,
+)
 from oremi_tts.voices.en import EnglishVoice
 from oremi_tts.voices.fr import FrenchVoice
 
@@ -52,7 +56,7 @@ def api_load_voice():
     except VoiceNotFound as error:
       return str(error), 404
   else:
-    return "Bad Request", 400
+    return 'Bad Request', 400
 
 
 @app.route('/tts', methods = ['POST'])
@@ -62,7 +66,7 @@ def api_tts():
   text = strip_ending_punctuations(text)
 
   if not voice or not text:
-    return "Bad Request", 400
+    return 'Bad Request', 400
 
   try:
     load_voice(voice)
@@ -80,7 +84,3 @@ def api_tts():
   with io.BytesIO() as out:
     save_wav(audio, rate = 24000, path = out)
     return Response(out.getvalue(), mimetype = 'audio/wav')
-
-
-if __name__ == '__main__':
-  app.run(host = '0.0.0.0', port = 5215)
