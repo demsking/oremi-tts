@@ -16,15 +16,6 @@ repos:
       - id: detect-private-key
       - id: double-quote-string-fixer
       - id: name-tests-test
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.23.1
-    hooks:
-      - id: check-gitlab-ci
-      - id: check-metaschema
-        files: ^schemas/.*\.json$
-      - id: check-jsonschema
-        files: ^oremi/skills/.*/config/.*\.yaml$
-        args: ["--schemafile", "schemas/SkillSchema.json"]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.0.272
     hooks:
