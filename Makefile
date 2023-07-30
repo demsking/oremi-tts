@@ -1,4 +1,4 @@
-IMAGE_VERSION := 1.0.0
+IMAGE_VERSION := 1.0.1
 TENSORFLOW_VERSION := 2.9.2
 IMAGE_NAME := demsking/oremi-tts
 
