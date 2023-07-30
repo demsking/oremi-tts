@@ -53,8 +53,8 @@ def api_load_voice():
   if voice:
     try:
       load_voice(voice)
-    except VoiceNotFound as error:
-      return str(error), 404
+    except VoiceNotFound:
+      return 'Voice Not Found', 404
   else:
     return 'Bad Request', 400
 
@@ -70,8 +70,8 @@ def api_tts():
 
   try:
     load_voice(voice)
-  except VoiceNotFound as error:
-    return str(error), 404
+  except VoiceNotFound:
+    return 'Voice Not Found', 404
 
   model = voices_instances[voice]
   text = model.parse_special_chars(text)
