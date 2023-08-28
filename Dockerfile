@@ -16,6 +16,8 @@ RUN git clone --depth 1 --branch ${TENSORFLOWTTS_VERSION} https://github.com/Ten
 
 # -------------------------------------
 
+FROM tensorflow/tensorflow:${TENSORFLOW_VERSION}
+
 ARG TENSORFLOW_VERSION
 ARG CREATED_DATE
 ARG PACKAGE_NAME
@@ -27,8 +29,6 @@ ARG SOURCE_URL
 ARG VENDOR
 ARG LICENSE
 ARG REVISION
-
-FROM tensorflow/tensorflow:${TENSORFLOW_VERSION}
 
 # @see https://github.com/opencontainers/image-spec/blob/main/annotations.md
 LABEL org.opencontainers.image.title="$PACKAGE_NAME"
