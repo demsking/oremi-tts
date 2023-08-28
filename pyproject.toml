@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "oremi-tts"
+version = "1.2.0.beta0"
+description = "Transform text into lifelike speech with advanced neural network models"
+keywords = ["tts", "tensorflow"]
+authors = ["Sébastien Demanou <demsking@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://gitlab.com/demsking/oremi-tts"
+documentation = "https://gitlab.com/demsking/oremi-tts/-/blob/main/README.md"
+
+[tool.poetry.urls]
+"Say Thanks!" = "https://www.buymeacoffee.com/demsking"
+"Source" = "https://gitlab.com/demsking/oremi-tts"
+"Tracker" = "https://gitlab.com/demsking/oremi-tts/-/issues"
+
+[tool.skjold]
+sources = ["pyup", "gemnasium", "osv", "pypa"]
+report_only = false # Exit with non-zero exit code on findings.
+
+[tool.pytest.ini_options]
+# Function starting with the following pattern are considered for test cases.
+python_functions = "test_"
+
+[tool.ruff]
+fix = true
+target-version = "py38"
+
+# Only enable rules that have safe autofixes;
+# only enable rules that are relevant to stubs
+select = [
+  "F401",   # Remove unused imports
+  "UP004",  # Remove explicit `object` inheritance
+  "UP006",  # PEP-585 autofixes
+  "UP007",  # PEP-604 autofixes
+  "UP013",  # Class-based syntax for TypedDicts
+  "UP014",  # Class-based syntax for NamedTuples
+  "UP019",  # Use str over typing.Text
+  "UP035",  # import from typing, not typing_extensions, wherever possible
+  "PYI009",  # use `...`, not `pass`, in empty class bodies
+  "PYI010",  # function bodies must be empty
+  "PYI012",  # class bodies must not contain `pass`
+  "PYI020",  # quoted annotations are always unnecessary in stubs
+]
+
+ignore = [
+  "E501",   # ignore line too long
+  "D100",   # ignore missing docstrings in public module
+  "D104",   # ignore missing docstrings in public package
+  "D105",   # ignore missing docstrings in magic methods
+  "RUF001", # ignore ambiguous unicode characters
+  "RUF005", # admittedly an optimization of code rather than a fail
+]
+
+line-length = 128
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "single"
+inline-quotes = "single"
+
+[tool.ruff.pydocstyle]
+convention = "google"

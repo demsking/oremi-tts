@@ -1,10 +1,24 @@
+# Copyright 2023 Sébastien Demanou. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 import re
 
 import tensorflow as tf
 
 
 class Voice:
-  def __init__(self, lang: str, text2mel_model, vocoder_model, processor, special_chars):  # noqa: E501
+  def __init__(self, lang: str, text2mel_model, vocoder_model, processor, special_chars):
     self.lang = lang
     self.text2mel_model = text2mel_model
     self.vocoder_model = vocoder_model
@@ -24,18 +38,18 @@ class Voice:
 
     # text2mel part
     if self.text2mel_name == 'TACOTRON':
-      _, mel_outputs, _stop_token_prediction, alignment_history = self.text2mel_model.inference(  # noqa: E501
-          tf.expand_dims(tf.convert_to_tensor(input_ids, dtype=tf.int32), 0),
-          tf.convert_to_tensor([len(input_ids)], tf.int32),
-          tf.convert_to_tensor([0], dtype=tf.int32)
+      _, mel_outputs, _stop_token_prediction, alignment_history = self.text2mel_model.inference( # pylint: disable=unused-variable
+        tf.expand_dims(tf.convert_to_tensor(input_ids, dtype = tf.int32), 0),
+        tf.convert_to_tensor([len(input_ids)], tf.int32),
+        tf.convert_to_tensor([0], dtype = tf.int32)
       )
     else:
       raise ValueError('Only TACOTRON, FASTSPEECH2 are supported on text2mel_name')
 
     # vocoder part
     if self.vocoder_name == 'MB-MELGAN':
-      # tacotron-2 generate noise in the end symtematic, let remove it :v.
       if self.text2mel_name == 'TACOTRON':
+        # tacotron-2 generate noise in the end symtematic, let remove it :v.
         remove_end = 1024
       else:
         remove_end = 1

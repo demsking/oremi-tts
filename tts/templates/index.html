@@ -10,7 +10,7 @@
       body {
         margin: 0;
       }
-      
+
       .oremi-tts {
         display: flex;
         flex-direction: column;
@@ -21,7 +21,7 @@
         position: fixed;
         height: 100%;
         width: 100%;
-        
+
         padding-top: 2rem;
         background-image: url(../static/retrosupply-jLwVAUtLOAQ-unsplash.jpg);
         background-position: center;
@@ -41,7 +41,11 @@
         background-color: white;
         box-shadow: 0 0 0 1px rgba(53,72,91,.04),0 2px 2px rgba(0,0,0,0),0 4px 4px rgba(0,0,0,.01),0 10px 8px rgba(0,0,0,.02),0 15px 15px rgba(0,0,0,.02),0 30px 30px rgba(0,0,0,.02),0 70px 65px rgba(0,0,0,.03);
       }
-      
+
+      .oremi-tts__card {
+        padding: .3em 1.3em;
+      }
+
       .oremi-tts__form__fieldset {
         display: flex;
         align-items: center;
@@ -74,7 +78,7 @@
         border-radius: .2rem;
         padding: .4em 1.2em;
       }
-      
+
       .oremi-tts__form__fieldset__button:disabled {
         opacity: .6;
       }
@@ -84,7 +88,7 @@
         text-align: center;
         text-shadow: #000 1px 0 10px;
       }
-      
+
       .oremi-tts__copyrights a {
         color: white;
       }
@@ -119,7 +123,9 @@
           </fieldset>
         </form>
       </div>
-      <div class="oremi-tts__card" v-text="message"></div>
+      <template v-if="message">
+        <div class="oremi-tts__card" v-text="message"></div>
+      </template>
       <template v-if="audio">
         <audio :src="audio" controls autoplay/>
       </template>
@@ -136,7 +142,7 @@
     </div>
     <script type="module">
       import { createApp, ref, reactive, onMounted } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
-    
+
       createApp({
         setup() {
           const voices = reactive([]);
@@ -145,7 +151,9 @@
           const audio = ref(null);
 
           async function submit(event) {
+            message.value = '';
             disabled.value = true;
+            audio.value = null;
 
             const data = new FormData(event.target);
             const payload = Object.fromEntries(data.entries());
@@ -154,7 +162,7 @@
               body: JSON.stringify(payload),
               cache: 'no-cache',
               headers: {
-                'Content-type':'application/json', 
+                'Content-type':'application/json',
               },
             });
 

@@ -1,5 +1,10 @@
-flask>=2.3.2
-flask-cors>=3.0.10
-scipy>=1.9.3
-gunicorn>=20.1.0
-num2words>=0.5.12
+--extra-index-url https://test.pypi.org/simple
+
+flask==2.3.2
+flask-cors==3.0.10
+gunicorn==20.1.0
+num2words==0.5.12
+oremi-core==1.0.0.dev17
+oremi-discovery-client==1.0.0.dev7
+scipy==1.10.1
+toml==0.10.2

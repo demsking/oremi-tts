@@ -1,17 +1,58 @@
 version: '3.8'
 services:
-  server:
+  discovery:
+    image: demsking/oremi-discovery
+    volumes:
+      - ~/.config/oremi/ssl:/oremi/ssl:ro
+    command: [
+      "--cert-file", "/oremi/ssl/localhost.pem",
+      "--key-file", "/oremi/ssl/localhost-key.pem",
+    ]
+  proxy:
+    image: nginx:alpine
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ~/.config/oremi/ssl/localhost.pem:/oremi/ssl/fullchain.pem:ro
+      - ~/.config/oremi/ssl/localhost-key.pem:/oremi/ssl/privkey.pem:ro
+    ports:
+      - 15215:443
+    depends_on:
+      - tts
+      - cpu
+  tts:
     tty: true
     runtime: nvidia
     build:
       context: .
-      # dockerfile: dev.Dockerfile
       args:
         TENSORFLOW_VERSION: 2.9.2-gpu
-    volumes:
-      - ./oremi_tts:/var/www/oremi_tts
-      - ~/.cache/nltk_data:/home/mandela/nltk_data
-      - ~/.cache/tensorflow_tts:/home/mandela/.cache/tensorflow_tts
+    environment: &environment
+      SERVICE_HOST: $SERVICE_HOST
+      SERVICE_PORT: 15215
+      SERVICE_CERT_FILE: /oremi/ssl/localhost.pem
+      SERVICE_KEY_FILE: /oremi/ssl/localhost-key.pem
+      DISCOVERY_URI: wss://discovery:5105
+      DISCOVERY_CERT_FILE: /oremi/ssl/localhost.pem
+    volumes: &volumes
+      - ./bin:/oremi/bin
+      - ./tts:/oremi/tts
+      - ./discovery:/oremi/discovery
+      - ~/.cache/nltk_data:/home/oremi/nltk_data
+      - ~/.cache/tensorflow_tts:/home/oremi/.cache/tensorflow_tts
+      - ~/.config/oremi/ssl:/oremi/ssl:ro
+    # ports:
+    #   - 15215:5215
+    # command: bash
+  cpu:
+    tty: true
+    build:
+      context: .
+      args:
+        TENSORFLOW_VERSION: 2.9.2
+    environment:
+      <<: *environment
+      SERVICE_PORT: 25215
+    volumes: *volumes
     ports:
-      - 5216:5215
-    entrypoint: "flask --app server:app run -h :: -p 5215 --reload"
+      - 25215:5215
+  #   entrypoint: "flask --app tts:main run -h 0.0.0.0 -p 5215 --reload"

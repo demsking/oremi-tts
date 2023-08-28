@@ -1,36 +1,89 @@
-IMAGE_VERSION := 1.0.1
+APP_NAME := $(shell python metadata.py name)
+APP_VERSION := $(shell python metadata.py version)
+IMAGE_NAME := demsking/$(APP_NAME)
+
 TENSORFLOW_VERSION := 2.9.2
-IMAGE_NAME := demsking/oremi-tts
 
-IMAGE_FILES := $(wildcard oremi_tts/**/*)
-IMAGE_FILES := $(filter-out %/__pycache__%, $(IMAGE_FILES))
+SSL_PATH := ~/.config/oremi/ssl
+SSL_CERT_FILE := $(SSL_PATH)/localhost.pem
 
-.PNONY: lint build-images publish-images
+.PHONY: all images publish-images test
 
-# start dev env
+# Start the development environment using tmuxinator
 env:
 	tmuxinator
+
+install:
+	pip install pylint
+	pip install --no-cache-dir -r requirements.txt
+
+$(SSL_CERT_FILE):
+	mkdir -p $(shell dirname $@)
+	openssl req -x509 -nodes -new -sha256 -days 3650 -newkey rsa:2048 \
+	  -subj "/C=CM/CN=localhost" \
+	  -addext "subjectAltName = DNS:discovery" \
+	  -keyout $(SSL_PATH)/localhost-key.pem \
+	  -out $(SSL_CERT_FILE)
+
+certificates: $(SSL_CERT_FILE)
+
+start: certificates
+	docker-compose up
 
 lint:
 	pre-commit run --all-files
 
-install:
-	pip install -r requirements.txt
+fix:
+	ruff check . --fix
 
-start:
-	python -m oremi_tts
+test:
+	pytest
 
-build-images: $(IMAGE_FILES)
-	docker build . --build-arg TENSORFLOW_VERSION=$(TENSORFLOW_VERSION) -t $(IMAGE_NAME):$(IMAGE_VERSION) \
-		&& docker build . --build-arg TENSORFLOW_VERSION=$(TENSORFLOW_VERSION) -t $(IMAGE_NAME):latest \
-		&& docker build . --build-arg TENSORFLOW_VERSION=$(TENSORFLOW_VERSION)-gpu -t $(IMAGE_NAME):$(IMAGE_VERSION)-gpu \
-		&& docker build . --build-arg TENSORFLOW_VERSION=$(TENSORFLOW_VERSION)-gpu -t $(IMAGE_NAME):gpu-latest
+coverage:
+	pytest --cov=oremi-tts
 
-publish-images: build-images
-	git commit . -m "Release $(IMAGE_VERSION)"
-	git tag v$(IMAGE_VERSION)
-	docker push $(IMAGE_NAME):$(IMAGE_VERSION)
+coverage-html:
+	pytest --cov=oremi-tts --cov-report=html
+
+update:
+	nix flake update
+	pre-commit autoupdate
+
+images:
+	docker build \
+	  --progress plain . -t $(IMAGE_NAME):$(APP_VERSION) \
+	  --build-arg TENSORFLOW_VERSION="$(TENSORFLOW_VERSION)" \
+	  --build-arg PACKAGE_NAME="$(APP_NAME)" \
+	  --build-arg CREATED_DATE="$(shell date --rfc-3339=seconds)" \
+	  --build-arg MAINTAINER="$(shell python metadata.py authors)" \
+	  --build-arg DESCRIPTION="$(shell python metadata.py description)" \
+	  --build-arg DOCUMENTATION="$(shell python metadata.py documentation)" \
+	  --build-arg VERSION="$(APP_VERSION)" \
+	  --build-arg REVISION="$(shell git rev-parse HEAD)" \
+	  --build-arg SOURCE_URL="$(shell python metadata.py repository)" \
+	  --build-arg VENDOR="Sébastien Demanou" \
+	  --build-arg LICENSE="$(shell python metadata.py license)"
+	docker tag $(IMAGE_NAME):$(APP_VERSION) $(IMAGE_NAME):latest
+	docker build \
+	  --progress plain . -t $(IMAGE_NAME):$(APP_VERSION)-gpu \
+	  --build-arg TENSORFLOW_VERSION="$(TENSORFLOW_VERSION)-gpu" \
+	  --build-arg PACKAGE_NAME="$(APP_NAME)" \
+	  --build-arg CREATED_DATE="$(shell date --rfc-3339=seconds)" \
+	  --build-arg MAINTAINER="$(shell python metadata.py authors)" \
+	  --build-arg DESCRIPTION="$(shell python metadata.py description)" \
+	  --build-arg DOCUMENTATION="$(shell python metadata.py documentation)" \
+	  --build-arg VERSION="$(APP_VERSION)" \
+	  --build-arg REVISION="$(shell git rev-parse HEAD)" \
+	  --build-arg SOURCE_URL="$(shell python metadata.py repository)" \
+	  --build-arg VENDOR="Sébastien Demanou" \
+	  --build-arg LICENSE="$(shell python metadata.py license)"
+	docker tag $(IMAGE_NAME):$(APP_VERSION)-gpu $(IMAGE_NAME):latest-gpu
+
+publish-images: images
+	git commit pyproject.toml -m "Release $(APP_VERSION)"
+	git tag v$(APP_VERSION)
+	docker push $(IMAGE_NAME):$(APP_VERSION)
 	docker push $(IMAGE_NAME):latest
-	docker push $(IMAGE_NAME):$(IMAGE_VERSION)-gpu
-	docker push $(IMAGE_NAME):gpu-latest
+	docker push $(IMAGE_NAME):$(APP_VERSION)-gpu
+	docker push $(IMAGE_NAME):latest-gpu
 	git push --tags origin main
