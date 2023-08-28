@@ -6,7 +6,7 @@ Oremi Text to Speech leverages TensorflowTTS to convert text into
 natural-sounding speech, enabling seamless integration of high-quality
 text-to-speech capabilities into applications.
 
-![Oremi Text to Speech Screenshot](https://gitlab.com/demsking/oremi-tts/-/raw/main/screenshot.png)
+![Oremi Text to Speech Screenshot](https://gitlab.com/demsking/oremi-tts/-/raw/master/screenshot.webp)
 
 ## Table of Contents
 
