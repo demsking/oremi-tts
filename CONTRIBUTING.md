@@ -87,7 +87,6 @@ Therefore:
 | images          | Builds a Docker image for the project, incorporating relevant metadata.                                |
 | publish-images  | Builds and publishes a Docker image to the specified repository, along with Git tagging and pushing.   |
 
-
 Please see the [Makefile](Makefile) for the full list of targets.
 
 ## Documentation

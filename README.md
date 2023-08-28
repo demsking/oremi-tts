@@ -10,38 +10,47 @@ text-to-speech capabilities into applications.
 
 ## Table of Contents
 
-- [Start](#start)
+- [Running the Oremi TTS Service with CPU](#running-the-oremi-tts-service-with-cpu)
+- [Running the Oremi TTS Service with GPU](#running-the-oremi-tts-service-with-gpu)
 - [Oremi TTS API](#oremi-tts-api)
+- [Contribute](#contribute)
+- [Versioning](#versioning)
 - [License](#license)
 
-## Start
+## Running the Oremi TTS Service with CPU
 
-**Start Oremi TTS with CPU image**
+Use the official Docker image [`demsking/oremi-tts`](https://hub.docker.com/r/demsking/oremi-tts):
 
 ```sh
 docker run -d \
   --name oremi-tts \
   -p 5215:5215 \
-  -v ~/.cache/nltk_data:/home/mandela/nltk_data \
-  -v ~/.cache/tensorflow_tts:/home/mandela/.cache/tensorflow_tts \
-  demsking/oremi-tts
+  -v ~/.cache/nltk_data:/home/oremi/nltk_data \
+  -v ~/.cache/tensorflow_tts:/home/oremi/.cache/tensorflow_tts \
+  demsking/oremi-tts:latest
 ```
 
-For testing, open http://localhost:5215
+You can access the Oremi TTS service from your web browser by navigating to
+http://localhost:5215. This will open the Oremi TTS user interface, where you can
+input text and listen to the generated speech.
 
-**Start Oremi TTS with GPU image**
+## Running the Oremi TTS Service with GPU
+
+Use the official Docker image [`demsking/oremi-tts`](https://hub.docker.com/r/demsking/oremi-tts):
 
 ```sh
 docker run -d \
   --name oremi-tts \
   --runtime=nvidia \
   -p 5215:5215 \
-  -v ~/.cache/nltk_data:/home/mandela/nltk_data \
-  -v ~/.cache/tensorflow_tts:/home/mandela/.cache/tensorflow_tts \
+  -v ~/.cache/nltk_data:/home/oremi/nltk_data \
+  -v ~/.cache/tensorflow_tts:/home/oremi/.cache/tensorflow_tts \
   demsking/oremi-tts:latest-gpu
 ```
 
-For testing, open http://localhost:5215
+You can access the Oremi TTS service from your web browser by navigating to
+http://localhost:5215. This will open the Oremi TTS user interface, where you
+can input text and listen to the generated speech.
 
 ## Oremi TTS API
 
@@ -49,8 +58,26 @@ Found OpenAPI specification file for Oremi TTS API:
 
 - [Oremi TTS API](https://gitlab.com/demsking/oremi-tts/blob/main/openapi.yaml)
 
+## Contribute
+
+Please follow [CONTRIBUTING.md](https://gitlab.com/demsking/oremi-tts/blob/main/CONTRIBUTING.md).
+
+## Versioning
+
+Given a version number `MAJOR.MINOR.PATCH`, increment the:
+
+- `MAJOR` version when you make incompatible API changes,
+- `MINOR` version when you add functionality in a backwards-compatible manner,
+  and
+- `PATCH` version when you make backwards-compatible bug fixes.
+
+Additional labels for pre-release and build metadata are available as extensions
+to the `MAJOR.MINOR.PATCH` format.
+
+See [SemVer.org](https://semver.org/) for more details.
+
 ## License
 
-Under the MIT license.
-See [LICENSE](https://gitlab.com/demsking/oremi-tts/blob/main/LICENSE)
-file for more details.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License.
+You may obtain a copy of the License at [LICENSE](https://gitlab.com/demsking/oremi-tts/blob/main/LICENSE).
