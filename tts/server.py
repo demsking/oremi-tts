@@ -101,6 +101,8 @@ def api_tts():
 
   _mels, _alignment_history, audio = model.do_synthesis(text) # pylint: disable=unused-variable
 
+  logger.info('Sending audio data')
+
   with io.BytesIO() as out:
     save_wav(audio, rate = 24000, path = out)
     return Response(out.getvalue(), mimetype = 'audio/wav')
